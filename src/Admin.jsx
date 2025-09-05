@@ -8,7 +8,7 @@ export default function Admin() {
     const [respostas, setRespostas] = useState({});
     const [novaPergunta, setNovaPergunta] = useState("");
 
-    const backendURL = "https://backend-chatbot-nyq8.onrender.com/"; //"http://127.0.0.1:8000";
+    const backendURL = "https://backend-chatbot-nyq8.onrender.com"; //"http://127.0.0.1:8000";
 
     // Buscar produtos
     useEffect(() => {

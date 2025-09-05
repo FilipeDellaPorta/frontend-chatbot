@@ -6,7 +6,7 @@ function User() {
     const [perguntas, setPerguntas] = useState([]);
     const [respostas, setRespostas] = useState({});
 
-    const backendURL = "https://backend-chatbot-nyq8.onrender.com/"; //"http://127.0.0.1:8000";
+    const backendURL = "https://backend-chatbot-nyq8.onrender.com"; //"http://127.0.0.1:8000";
 
     // Buscar produtos
     useEffect(() => {

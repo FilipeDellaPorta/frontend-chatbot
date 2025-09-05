@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const backendURL = "https://backend-chatbot-nyq8.onrender.com/"; //"http://127.0.0.1:8000";
+const backendURL = "https://backend-chatbot-nyq8.onrender.com"; //"http://127.0.0.1:8000";
 
 export default function Cliente() {
     const [pergunta, setPergunta] = useState("");
