@@ -1,0 +1,37 @@
+.navbar {
+    padding: 10px;
+    background-color: #eee;
+    display: flex;
+    gap: 10px;
+}
+
+/* Botão padrão */
+.navbar-link {
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    /* quase branco */
+    color: #000;
+    font-weight: bold;
+    border: 2px solid #000;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover: preenche o botão */
+.navbar-link:hover {
+    background-color: #cce5ff;
+    color: #000;
+}
+
+/* Mantém a cor branca mesmo depois de clicado */
+.navbar-link:visited {
+    color: #000;
+}
+
+/* Link ativo: preenchido com azul */
+.navbar-link.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
