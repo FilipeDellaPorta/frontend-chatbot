@@ -1,7 +1,7 @@
-import "./User.css";
+import "./Admin.css";
 import { useEffect, useState } from "react";
 
-function User() {
+function Admin() {
     const [produtos, setProdutos] = useState([]);
     const [perguntas, setPerguntas] = useState([]);
     const [respostas, setRespostas] = useState({});
@@ -95,4 +95,4 @@ function User() {
     );
 }
 
-export default User;
+export default Admin;

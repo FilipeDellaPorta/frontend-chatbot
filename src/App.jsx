@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
-import User from "./User.jsx";
+import Admin from "./Admin.jsx";
 import "./App.css";
 import Cliente from "./Cliente.jsx";
 
@@ -17,13 +17,13 @@ function App() {
           to="/"
           className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}
         >
-          User
+          Admin
         </NavLink>
       </nav>
 
       <Routes>
         <Route path="cliente" element={<Cliente />} />
-        <Route path="/" element={<User />} />
+        <Route path="/" element={<Admin />} />
       </Routes>
     </Router>
   );
