@@ -9,15 +9,22 @@ export default function Cliente() {
     const enviarPergunta = async () => {
         if (!pergunta) return;
 
-        const res = await fetch(`${backendURL}/pergunta`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ pergunta })
-        });
+        try {
+            const res = await fetch(`${backendURL}/pergunta`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ pergunta })
+            });
 
-        const data = await res.json();
-        setResposta(data.resposta || "Sua pergunta foi enviada para o Admin.");
-        setPergunta("");
+            const data = await res.json();
+            console.log("Resposta do backend:", data);
+
+            setResposta(data.resposta ?? "Sua pergunta foi enviada e logo será respondida.");
+            setPergunta("");
+        } catch (error) {
+            console.error("Erro ao enviar pergunta:", error);
+            setResposta("Erro ao se comunicar com o servidor.");
+        }
     };
 
     return (
