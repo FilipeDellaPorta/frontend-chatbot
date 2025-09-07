@@ -37,16 +37,20 @@ function Admin() {
             body: JSON.stringify({ id, resposta: respostas[id] }),
         })
             .then(res => res.json())
-            .then(() => {
-                alert("Resposta enviada!");
-                // Remove a pergunta da lista
-                setPerguntas(perguntas.filter(p => p.id !== id));
-                // Remove a resposta do estado
-                setRespostas((prev) => {
-                    const copy = { ...prev };
-                    delete copy[id];
-                    return copy;
-                });
+            .then((data) => {
+                if (data.respondida) {
+                    alert("Resposta enviada!");
+                    // Remove a pergunta da lista
+                    setPerguntas(prev => prev.filter(p => p.id !== id));
+                    // Remove a resposta do estado
+                    setRespostas(prev => {
+                        const copy = { ...prev };
+                        delete copy[id];
+                        return copy;
+                    });
+                } else {
+                    alert("Erro ao enviar a resposta. Tente novamente.");
+                }
             });
     };
 

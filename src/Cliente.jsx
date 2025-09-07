@@ -10,7 +10,7 @@ export default function Cliente() {
         if (!pergunta) return;
 
         try {
-            const res = await fetch(`${backendURL}/perguntas`, {
+            const res = await fetch(`${backendURL}/pergunta`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ pergunta })
