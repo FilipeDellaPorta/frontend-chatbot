@@ -56,25 +56,68 @@ function Admin() {
             });
     };
 
+    const [ultimaPerguntaEnviada, setUltimaPerguntaEnviada] = useState("");
     // Função para enviar pergunta pelo chat flutuante
     const enviarPerguntaChat = async () => {
         if (!perguntaChat) return;
 
         try {
-            const res = await fetch(`${backendURL}/pergunta`, {
+            // Envia a pergunta
+            await fetch(`${backendURL}/pergunta`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ pergunta: perguntaChat })
             });
 
-            const data = await res.json();
-            setRespostaChat(data.resposta ?? "Sua pergunta foi enviada e logo será respondida.");
+            // Guarda a pergunta antes de limpar o input
+            setUltimaPerguntaEnviada(perguntaChat);
+
+            // Limpa o input
             setPerguntaChat("");
+
+            // Checa se a pergunta já está respondida no DB
+            const res = await fetch(`${backendURL}/perguntas`);
+            const data = await res.json();
+
+            const perguntaNoDB = data.find(
+                p => p.pergunta === perguntaChat
+            );
+
+            // Se ainda não tiver resposta, exibe a mensagem temporária
+            if (!perguntaNoDB?.respondida) {
+                setRespostaChat("Sua pergunta foi enviada e logo será respondida.");
+            }
+
         } catch (error) {
             console.error("Erro ao enviar pergunta:", error);
             setRespostaChat("Erro ao se comunicar com o servidor.");
         }
     };
+
+    // Buscar a resposta manual
+    useEffect(() => {
+        const fetchRespostaChat = async () => {
+            if (!ultimaPerguntaEnviada) return;
+
+            try {
+                const res = await fetch(`${backendURL}/perguntas`);
+                const data = await res.json();
+
+                const respostaParaPergunta = data.find(
+                    p => p.respondida && p.pergunta === ultimaPerguntaEnviada
+                );
+
+                if (respostaParaPergunta && respostaParaPergunta.resposta !== respostaChat) {
+                    setRespostaChat(respostaParaPergunta.resposta);
+                }
+            } catch (error) {
+                console.error("Erro ao buscar respostas do chat:", error);
+            }
+        };
+
+        const interval = setInterval(fetchRespostaChat, 100);
+        return () => clearInterval(interval);
+    }, [ultimaPerguntaEnviada, respostaChat]);
 
     return (
         <div className="container">
@@ -96,7 +139,14 @@ function Admin() {
                     <div id="chat-header">Chat do Cliente</div>
                     <div id="chat-body">
                         {respostaChat && (
-                            <div style={{ marginTop: "10px", padding: "10px", backgroundColor: "#f4f4f4", borderRadius: "5px" }}>
+                            <div
+                                style={{
+                                    marginTop: "10px",
+                                    padding: "10px",
+                                    backgroundColor: "#f4f4f4",
+                                    borderRadius: "5px"
+                                }}
+                            >
                                 <strong>Resposta:</strong> {respostaChat}
                             </div>
                         )}
@@ -108,7 +158,17 @@ function Admin() {
                         value={perguntaChat}
                         onChange={(e) => setPerguntaChat(e.target.value)}
                     />
-                    <button id="chat-send" onClick={enviarPerguntaChat}>Enviar</button>
+                    <div style={{ display: "flex" }}>
+                        <button id="chat-send" onClick={enviarPerguntaChat}>
+                            Enviar
+                        </button>
+                        <button id="chat-end" onClick={() => {
+                            setPerguntaChat("");
+                            setRespostaChat("");
+                        }}>
+                            Encerrar
+                        </button>
+                    </div>
                 </div>
 
                 {/* Perguntas não respondidas */}
