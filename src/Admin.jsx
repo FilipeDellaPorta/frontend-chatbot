@@ -6,6 +6,10 @@ function Admin() {
     const [perguntas, setPerguntas] = useState([]);
     const [respostas, setRespostas] = useState({});
 
+    // Chat do cliente
+    const [perguntaChat, setPerguntaChat] = useState("");
+    const [respostaChat, setRespostaChat] = useState("");
+
     const backendURL = "https://backend-chatbot-nyq8.onrender.com"; //"http://127.0.0.1:8000";
 
     // Buscar produtos
@@ -26,7 +30,7 @@ function Admin() {
         fetchPerguntas(); // busca inicial
         const interval = setInterval(fetchPerguntas, 5000); // a cada 5 segundos
 
-        return () => clearInterval(interval); // limpa o intervalo quando o componente desmonta
+        return () => clearInterval(interval);
     }, []);
 
     // Enviar resposta manual
@@ -40,9 +44,7 @@ function Admin() {
             .then((data) => {
                 if (data.respondida) {
                     alert("Resposta enviada!");
-                    // Remove a pergunta da lista
                     setPerguntas(prev => prev.filter(p => p.id !== id));
-                    // Remove a resposta do estado
                     setRespostas(prev => {
                         const copy = { ...prev };
                         delete copy[id];
@@ -54,9 +56,30 @@ function Admin() {
             });
     };
 
+    // Função para enviar pergunta pelo chat flutuante
+    const enviarPerguntaChat = async () => {
+        if (!perguntaChat) return;
+
+        try {
+            const res = await fetch(`${backendURL}/pergunta`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ pergunta: perguntaChat })
+            });
+
+            const data = await res.json();
+            setRespostaChat(data.resposta ?? "Sua pergunta foi enviada e logo será respondida.");
+            setPerguntaChat("");
+        } catch (error) {
+            console.error("Erro ao enviar pergunta:", error);
+            setRespostaChat("Erro ao se comunicar com o servidor.");
+        }
+    };
+
     return (
         <div className="container">
             <div className="dashboard">
+                {/* Lista de produtos */}
                 <div className="produtos-container">
                     <h1>Produtos Cadastrados</h1>
                     <ul className="produtos-lista">
@@ -68,6 +91,27 @@ function Admin() {
                     </ul>
                 </div>
 
+                {/* Chat flutuante */}
+                <div id="chat-flutuante">
+                    <div id="chat-header">Chat do Cliente</div>
+                    <div id="chat-body">
+                        {respostaChat && (
+                            <div style={{ marginTop: "10px", padding: "10px", backgroundColor: "#f4f4f4", borderRadius: "5px" }}>
+                                <strong>Resposta:</strong> {respostaChat}
+                            </div>
+                        )}
+                    </div>
+                    <input
+                        id="chat-input"
+                        type="text"
+                        placeholder="Escreva sua mensagem..."
+                        value={perguntaChat}
+                        onChange={(e) => setPerguntaChat(e.target.value)}
+                    />
+                    <button id="chat-send" onClick={enviarPerguntaChat}>Enviar</button>
+                </div>
+
+                {/* Perguntas não respondidas */}
                 <div className="perguntas-container">
                     <h1>Perguntas Não Respondidas</h1>
                     <div className="perguntas-lista">
@@ -95,7 +139,6 @@ function Admin() {
                 </div>
             </div>
         </div>
-
     );
 }
 

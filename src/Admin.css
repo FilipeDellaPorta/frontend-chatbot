@@ -100,6 +100,55 @@ h1 {
   background-color: #0056b3;
 }
 
+/* Chat */
+#chat-flutuante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  max-height: 400px;
+  border: 1px solid #ccc;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: sans-serif;
+  z-index: 1000;
+}
+
+#chat-header {
+  background: #007bff;
+  color: white;
+  padding: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#chat-body {
+  flex: 1;
+  padding: 8px;
+  overflow-y: auto;
+}
+
+#chat-input {
+  border: none;
+  border-top: 1px solid #ccc;
+  padding: 8px;
+  width: calc(100% - 16px);
+  box-sizing: border-box;
+}
+
+#chat-send {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+}
+
+
 /* === Responsividade === */
 @media (max-width: 768px) {
   .dashboard {
